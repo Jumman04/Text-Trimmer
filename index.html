@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Text Trimmer</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+    h1 {
+      margin: 0;
+      padding: 10px;
+      text-align: center;
+      background-color: #f0f0f0;
+      flex: 0 0 auto;
+    }
+    form {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    textarea {
+      flex: 1;
+      font-family: monospace;
+      font-size: 16px;
+      padding: 10px;
+      border: none;
+      resize: none;
+    }
+    button {
+      flex: 0 0 40px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Text Trimmer</h1>
+  <form onsubmit="trimText(event)">
+    <textarea id="inputText" placeholder="Paste your text here..."></textarea>
+    <button type="submit">Trim</button>
+  </form>
+
+  <script>
+    function trimText(event) {
+      event.preventDefault();
+      let text = document.getElementById("inputText").value;
+
+      // Trim whitespace from start/end
+      text = text.trim();
+
+      // Replace 3+ line breaks with 2 line breaks
+      text = text.replace(/[\r\n]{3,}/g, '\n\n');
+
+      // Replace 2+ spaces, tabs, non-breaking spaces, zero-width spaces with single space
+      text = text.replace(/[ \t\u00A0\u200B]{2,}/g, ' ');
+
+      // Remove zero-width non-joiner and joiner
+      text = text.replace(/[\u200C\u200D]/g, '');
+
+      // Normalize to NFC
+      if ('normalize' in String.prototype) {
+        text = text.normalize('NFC');
+      }
+
+      document.getElementById("inputText").value = text;
+    }
+  </script>
+</body>
+</html>
