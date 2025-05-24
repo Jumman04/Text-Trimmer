@@ -42,6 +42,23 @@
       border: none;
       cursor: pointer;
     }
+    #copiedMessage {
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #4CAF50;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    #copiedMessage.show {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -50,30 +67,40 @@
     <textarea id="inputText" placeholder="Paste your text here..."></textarea>
     <button type="submit">Trim</button>
   </form>
+  <div id="copiedMessage">✅ Copied!</div>
 
   <script>
     function trimText(event) {
       event.preventDefault();
-      let text = document.getElementById("inputText").value;
+      let textarea = document.getElementById("inputText");
+      let text = textarea.value;
 
-      // Trim whitespace from start/end
+      // Trimming logic
       text = text.trim();
-
-      // Replace 3+ line breaks with 2 line breaks
       text = text.replace(/[\r\n]{3,}/g, '\n\n');
-
-      // Replace 2+ spaces, tabs, non-breaking spaces, zero-width spaces with single space
       text = text.replace(/[ \t\u00A0\u200B]{2,}/g, ' ');
-
-      // Remove zero-width non-joiner and joiner
       text = text.replace(/[\u200C\u200D]/g, '');
-
-      // Normalize to NFC
       if ('normalize' in String.prototype) {
         text = text.normalize('NFC');
       }
 
-      document.getElementById("inputText").value = text;
+      // Update textarea
+      textarea.value = text;
+
+      // Copy to clipboard
+      navigator.clipboard.writeText(text).then(() => {
+        showCopiedMessage();
+      }).catch(err => {
+        console.error("Clipboard error:", err);
+      });
+    }
+
+    function showCopiedMessage() {
+      const msg = document.getElementById("copiedMessage");
+      msg.classList.add("show");
+      setTimeout(() => {
+        msg.classList.remove("show");
+      }, 1500);
     }
   </script>
 </body>
