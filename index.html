@@ -80,9 +80,6 @@
       text = text.replace(/[\r\n]{3,}/g, '\n\n');
       text = text.replace(/[ \t\u00A0\u200B]{2,}/g, ' ');
       text = text.replace(/[\u200C\u200D]/g, '');
-      if ('normalize' in String.prototype) {
-        text = text.normalize('NFC');
-      }
 
       // Update textarea
       textarea.value = text;
