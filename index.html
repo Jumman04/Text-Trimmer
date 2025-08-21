@@ -76,6 +76,7 @@
       let text = textarea.value;
 
       // Trimming logic
+      text = text.replace("\\10", "\n");
       text = text.trim();
       text = text.replace(/[\r\n]{3,}/g, '\n\n');
       text = text.replace(/[ \t\u00A0\u200B]{2,}/g, ' ');
