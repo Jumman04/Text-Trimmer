@@ -73,14 +73,30 @@
     function trimText(event) {
       event.preventDefault();
       let textarea = document.getElementById("inputText");
-      let text = textarea.value;
+let text = textarea.value;
 
-      // Trimming logic
-      text = text.replace(/\\10/g, "\n");
-      text = text.trim();
-      text = text.replace(/[\r\n]{3,}/g, '\n\n');
-      text = text.replace(/[ \t\u00A0\u200B]{2,}/g, ' ');
-      text = text.replace(/[\u200C\u200D]/g, '');
+// "\10" কে newline বানাও
+text = text.replace(/\\10/g, "\n");
+
+// HTML entities decode (যেমন &apos; → ', &quot; → " ইত্যাদি)
+let textareaHelper = document.createElement("textarea");
+textareaHelper.innerHTML = text;
+text = textareaHelper.value;
+
+// HTML tags মুছে ফেলো
+text = text.replace(/<[^>]*>/g, "");
+
+// Trim শুরুর ও শেষের স্পেস/নিউলাইন
+text = text.trim();
+
+// একাধিক newline (৩ বা তার বেশি) -> ডাবল newline
+text = text.replace(/[\r\n]{3,}/g, "\n\n");
+
+// একাধিক স্পেস/ট্যাব/nbsp/zero-width space -> এক স্পেস
+text = text.replace(/[ \t\u00A0\u200B]{2,}/g, " ");
+
+// Zero-width joiner / non-joiner বাদ দাও
+text = text.replace(/[\u200C\u200D]/g, "");
 
       // Update textarea
       textarea.value = text;
