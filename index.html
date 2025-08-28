@@ -86,6 +86,8 @@ text = textareaHelper.value;
 // HTML tags মুছে ফেলো
 text = text.replace(/<[^>]*>/g, "");
 
+text = text.replace(/\|/g, "।");
+
 // Trim শুরুর ও শেষের স্পেস/নিউলাইন
 text = text.trim();
 
